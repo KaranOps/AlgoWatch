@@ -15,11 +15,13 @@ const StudentSchema = new mongoose.Schema({
     phone: {
         type: String,
         required: true,
+        unique: true,
         trim: true
     },
     codeforcesHandle: {
         type: String,
         required: true,
+        unique: true,
         trim: true
     },
     currentRating: {

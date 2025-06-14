@@ -3,7 +3,9 @@ const app = express();
 const connectDB = require('./config/db')
 const studentRoutes = require('./routes/studentRoutes');
 //Middleware to parse json body
-app.use(express.json());
+app.use(express.json()); const cors = require('cors');
+
+app.use(cors());
 
 connectDB();
 
