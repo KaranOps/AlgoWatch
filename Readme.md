@@ -1,0 +1,2 @@
+<div class="bg-layer-1 dark:bg-dark-layer-1 shadow-down-01 dark:shadow-dark-down-01 rounded-lg lc-md:pb-4 flex h-auto flex-col space-y-4 p-4 pb-0">
+<div class="lc-md:flex-row lc-md:items-center lc-md:space-y-0 flex flex-col flex-wrap space-y-2">
