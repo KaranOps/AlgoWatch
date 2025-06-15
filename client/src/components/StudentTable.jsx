@@ -1,12 +1,14 @@
 import React from 'react'
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
-
+import { convertToCSV } from '../utils/downloadCsv';
 const API_URL = import.meta.env.VITE_API_URL;
 
 
-const StudentTable = ({onEdit, refresh}) => {
+const StudentTable = ({ onEdit, refresh }) => {
     const [students, setStudents] = useState([]);
+    const navigate = useNavigate()
 
     useEffect(() => {
 
@@ -32,8 +34,21 @@ const StudentTable = ({onEdit, refresh}) => {
             }
         }
     };
+
+    //Download the Student data in csv
+    const downloadCSV = () => {
+        const csv = convertToCSV(students);
+        const blob = new Blob([csv], { type: '/text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'students.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
     return (
-        <div className="overflow-x-auto bg-white rounded-lg shadow-md mt-8">
+        <div className="overflow-x-auto bg-white rounded-lg shadow-md mt-5">
+
             <table className="min-w-full divide-y divide-gray-200 text-sm text-left">
                 <thead className="bg-gray-100 text-gray-600 uppercase tracking-wider text-xs">
                     <tr>
@@ -63,6 +78,12 @@ const StudentTable = ({onEdit, refresh}) => {
                                     Edit
                                 </button>
                                 <button
+                                    className="bg-gray-600 text-white px-2 py-1 rounded mr-2"
+                                    onClick={() => navigate(`/student/${student._id}`)}
+                                >
+                                    View Details
+                                </button>
+                                <button
                                     className="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded"
                                     onClick={() => handleDelete(student._id)}
                                 >
@@ -73,6 +94,14 @@ const StudentTable = ({onEdit, refresh}) => {
                     ))}
                 </tbody>
             </table>
+            <div className="flex justify-end mb-4">
+                <button
+                    className="bg-green-600 text-white mr-4 mt-4 px-2 py-2 cursor-pointer rounded"
+                    onClick={downloadCSV}
+                >
+                    Download CSV
+                </button>
+            </div>
         </div>
     )
 }

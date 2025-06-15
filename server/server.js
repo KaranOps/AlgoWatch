@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const connectDB = require('./config/db')
 const studentRoutes = require('./routes/studentRoutes');
+const codeforcesRoutes = require('./routes/codeforcesRoutes');
 //Middleware to parse json body
 app.use(express.json()); const cors = require('cors');
 
@@ -14,7 +15,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/students', studentRoutes);
-
+app.use('/api/codeforces', codeforcesRoutes);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

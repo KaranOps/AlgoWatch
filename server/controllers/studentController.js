@@ -1,13 +1,9 @@
 const Student = require('../models/student');
+const axios = require('axios');
 
 // Helper function to check if student already exists
-const checkStudentExists = async (email, studentId, excludeId = null) => {
-    const query = {
-        $or: [
-            { email: email },
-            { studentId: studentId }
-        ]
-    };
+const checkStudentExists = async (email, excludeId = null) => {
+    const query = { email };
 
     if (excludeId) {
         query._id = { $ne: excludeId };
@@ -21,6 +17,7 @@ const fetchCodeForcesRating = async (handle) => {
     try {
         const response = await axios.get(`https://codeforces.com/api/user.info?handles=${handle}`);
         const user = response.data.result[0];
+        console.log(user);
         return {
             currentRating: user.rating || 0,
             maxRating: user.maxRating || 0
