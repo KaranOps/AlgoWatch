@@ -32,10 +32,15 @@ const StudentSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    cfUserInfo: { type: Object }, 
+    cfRatingHistory: { type: Array, default: [] }, 
+    cfSubmissions: { type: Array, default: [] }, 
     lastUpdated: {
         type: Date,
         default: Date.now
-    }
+    },
+    reminderCount: { type: Number, default: 0 },
+    autoEmailEnabled: { type: Boolean, default: true }
 });
 
 module.exports = mongoose.models.Student || mongoose.model('Student', StudentSchema);

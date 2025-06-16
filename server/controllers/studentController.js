@@ -34,9 +34,20 @@ exports.createStudent = async (req, res) => {
         }
 
         // Fetch ratings using Codeforces handle
-        const { currentRating, maxRating } = await fetchCodeforcesData(studentData.codeforcesHandle);
+        const {
+            currentRating,
+            maxRating,
+            userInfo,
+            ratingHistory,
+            submissions
+        } = await fetchCodeforcesData(studentData.codeforcesHandle);
+
         studentData.currentRating = currentRating;
         studentData.maxRating = maxRating;
+        studentData.cfUserInfo = userInfo;           // Save full user info
+        studentData.cfRatingHistory = ratingHistory; // Save rating history
+        studentData.cfSubmissions = submissions;     // Save submissions
+        studentData.lastSynced = new Date();         // Save sync timestamp
 
         const student = new Student(studentData);
         await student.save();
@@ -58,7 +69,7 @@ exports.createStudent = async (req, res) => {
 //Read all students
 exports.getAllStudents = async (req, res) => {
     try {
-        const students = await Student.find();
+        const students = await Student.find({}, 'name email phone codeforcesHandle currentRating maxRating lastSynced');
         res.json(students);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -90,9 +101,17 @@ exports.updateStudent = async (req, res) => {
 
         // If handle is present, fetch updated ratings
         if (updates.codeforcesHandle) {
-            const { currentRating, maxRating } = await fetchCodeforcesData(updates.codeforcesHandle);
+            const { currentRating,
+                maxRating,
+                userInfo,
+                ratingHistory,
+                submissions } = await fetchCodeforcesData(updates.codeforcesHandle);
             updates.currentRating = currentRating;
             updates.maxRating = maxRating;
+            updates.cfUserInfo = userInfo;
+            updates.cfRatingHistory = ratingHistory;
+            updates.cfSubmissions = submissions;
+            updates.lastSynced = new Date();
         }
 
         // Now update student with new values

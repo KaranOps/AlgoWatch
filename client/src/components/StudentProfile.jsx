@@ -16,20 +16,19 @@ export default function StudentProfile() {
     const [psFilter, setPsFilter] = useState(7);
 
     useEffect(() => {
-        async function fetchStudentAndCF() {
+        const fetchStudentAndCF = async () => {
             setLoading(true);
             try {
                 // Fetch student info from your backend
                 const res = await fetch(`${API_URL}/students/${id}`);
                 const data = await res.json();
                 setStudent(data);
+                setCfData({
+                    userInfo: data.cfUserInfo,
+                    rating: data.cfRatingHistory,
+                    submissions: data.cfSubmissions
+                });
 
-                // Fetch Codeforces data if handle exists
-                if (data.codeforcesHandle) {
-                    const cfRes = await fetch(`${API_URL}/codeforces/user/${data.codeforcesHandle}`);
-                    const cfJson = await cfRes.json();
-                    setCfData(cfJson);
-                }
             } catch (err) {
                 console.error("Failed to fetch student or Codeforces data", err);
             } finally {
