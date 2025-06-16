@@ -1,9 +1,15 @@
 const Student = require('../models/student');
 const axios = require('axios');
-
+const { fetchCodeforcesData } = require('../utils/fetchCodeforcesData')
 // Helper function to check if student already exists
-const checkStudentExists = async (email, excludeId = null) => {
-    const query = { email };
+const checkStudentExists = async (email, codeforcesHandle, phone, excludeId = null) => {
+    const query = {
+        $or: [
+            { email },
+            { codeforcesHandle },
+            { phone },
+        ]
+    };
 
     if (excludeId) {
         query._id = { $ne: excludeId };
@@ -12,32 +18,13 @@ const checkStudentExists = async (email, excludeId = null) => {
     return await Student.findOne(query);
 };
 
-//Helper function to fetch Codeforces rating
-const fetchCodeForcesRating = async (handle) => {
-    try {
-        const response = await axios.get(`https://codeforces.com/api/user.info?handles=${handle}`);
-        const user = response.data.result[0];
-        console.log(user);
-        return {
-            currentRating: user.rating || 0,
-            maxRating: user.maxRating || 0
-        };
-    } catch (err) {
-        console.error("Failed to fetch Codeforces rating:", err.message);
-        return {
-            currentRating: 0,
-            maxRating: 0
-        };
-    }
-}
-
 // CREATE a new student
 exports.createStudent = async (req, res) => {
     try {
         const studentData = req.body;
 
         // Check if student already exists
-        const existingStudent = await checkStudentExists(studentData.email, studentData.studentId);
+        const existingStudent = await checkStudentExists(studentData.email, studentData.codeforcesHandle, studentData.phone);
         if (existingStudent) {
             return res.status(409).json({
                 success: false,
@@ -47,7 +34,7 @@ exports.createStudent = async (req, res) => {
         }
 
         // Fetch ratings using Codeforces handle
-        const { currentRating, maxRating } = await fetchCodeForcesRating(studentData.codeforcesHandle);
+        const { currentRating, maxRating } = await fetchCodeforcesData(studentData.codeforcesHandle);
         studentData.currentRating = currentRating;
         studentData.maxRating = maxRating;
 
@@ -103,7 +90,7 @@ exports.updateStudent = async (req, res) => {
 
         // If handle is present, fetch updated ratings
         if (updates.codeforcesHandle) {
-            const { currentRating, maxRating } = await fetchCodeForcesRating(updates.codeforcesHandle);
+            const { currentRating, maxRating } = await fetchCodeforcesData(updates.codeforcesHandle);
             updates.currentRating = currentRating;
             updates.maxRating = maxRating;
         }

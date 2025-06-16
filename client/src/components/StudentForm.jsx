@@ -38,7 +38,7 @@ const StudentForm = ({ selected, onSuccess, onCancel }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       if (selected && selected._id) {
         await axios.put(`${API_URL}/students/${selected._id}`, form);
@@ -48,17 +48,19 @@ const StudentForm = ({ selected, onSuccess, onCancel }) => {
       onSuccess();
     } catch (err) {
       console.error('Error submitting form:', err);
-      alert("Failed to save student. Please check if Codeforces handle is correct.");
+      const backendMessage =
+        err.response?.data?.error || "Failed to save student. Please try again.";
+      alert(backendMessage);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const formFields = [
-    { 
-      name: 'name', 
-      label: 'Full Name', 
-      placeholder: 'Enter student name', 
+    {
+      name: 'name',
+      label: 'Full Name',
+      placeholder: 'Enter student name',
       type: 'text',
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -66,10 +68,10 @@ const StudentForm = ({ selected, onSuccess, onCancel }) => {
         </svg>
       )
     },
-    { 
-      name: 'email', 
-      label: 'Email Address', 
-      placeholder: 'Enter email address', 
+    {
+      name: 'email',
+      label: 'Email Address',
+      placeholder: 'Enter email address',
       type: 'email',
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -78,10 +80,10 @@ const StudentForm = ({ selected, onSuccess, onCancel }) => {
         </svg>
       )
     },
-    { 
-      name: 'phone', 
-      label: 'Phone Number', 
-      placeholder: 'Enter phone number', 
+    {
+      name: 'phone',
+      label: 'Phone Number',
+      placeholder: 'Enter phone number',
       type: 'tel',
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -89,10 +91,10 @@ const StudentForm = ({ selected, onSuccess, onCancel }) => {
         </svg>
       )
     },
-    { 
-      name: 'codeforcesHandle', 
-      label: 'Codeforces Handle', 
-      placeholder: 'Enter Codeforces username', 
+    {
+      name: 'codeforcesHandle',
+      label: 'Codeforces Handle',
+      placeholder: 'Enter Codeforces username',
       type: 'text',
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -174,7 +176,7 @@ const StudentForm = ({ selected, onSuccess, onCancel }) => {
                 </>
               )}
             </button>
-            
+
             {onCancel && (
               <button
                 type="button"
@@ -195,7 +197,7 @@ const StudentForm = ({ selected, onSuccess, onCancel }) => {
       {/* Helper Text */}
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-500">
-          <span className="text-red-500">*</span> All fields are required. 
+          <span className="text-red-500">*</span> All fields are required.
           Make sure the Codeforces handle is valid and active.
         </p>
       </div>

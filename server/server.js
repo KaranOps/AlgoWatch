@@ -3,6 +3,7 @@ const app = express();
 const connectDB = require('./config/db')
 const studentRoutes = require('./routes/studentRoutes');
 const codeforcesRoutes = require('./routes/codeforcesRoutes');
+const schedular = require('./cronJobs/scheduler');
 //Middleware to parse json body
 app.use(express.json()); const cors = require('cors');
 
