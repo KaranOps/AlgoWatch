@@ -20,7 +20,6 @@ export default function PageHeader({ student, handleReminderToggle }) {
                     <div className="h-1 w-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded"></div>
                 </div>
                 <div className="bg-white rounded p-4 shadow mt-6">
-                    <h2 className="text-xl font-bold mb-4">Reminder Email Settings</h2>
                     <p>
                         <strong>Reminders Sent:</strong> {student.reminderCount ?? 0}
                     </p>
