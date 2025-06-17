@@ -142,3 +142,18 @@ exports.deleteStudent = async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 };
+
+//Enable/Disable reminder by ID
+exports.updateReminder = async(req,res) => {
+    try {
+        const {enabled} = req.body;
+        const student = await Student.findByIdAndUpdate(
+            req.params.id,
+            {autoEmailEnabled:enabled},
+            {new:true}
+        );
+        res.json(student);
+    } catch (err) {
+        console.error("Failed to update reminder:", err);
+    }
+}

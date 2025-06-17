@@ -4,6 +4,7 @@ import { Chart as ChartJS } from 'chart.js/auto'
 import { Line, Bar } from 'react-chartjs-2';
 import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
+import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -213,6 +214,19 @@ export default function StudentProfile() {
         },
     };
 
+    //Reminder Enable disable
+    const handleReminderToggle = async (e) => {
+        try {
+            const res = await axios.patch(`${API_URL}/students/${student._id}/email-toggle`, {
+                enabled: e.target.checked,
+            });
+            setStudent(res.data);
+        } catch (error) {
+            console.error("Failed to update email toggle:", error);
+            alert("Something went wrong when updating the email toggle");
+        }
+    }
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -227,10 +241,32 @@ export default function StudentProfile() {
                         </svg>
                         Back to Dashboard
                     </Link>
-                    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
-                        {student.name}'s Profile
-                    </h1>
-                    <div className="h-1 w-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded"></div>
+                    <div className="md:flex justify-between">
+                        <div>
+                            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+                                {student.name}'s Profile
+                            </h1>
+                            <div className="h-1 w-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded"></div>
+                        </div>
+                        <div className="bg-white rounded p-4 shadow mt-6">
+                            <h2 className="text-xl font-bold mb-4">Reminder Email Settings</h2>
+                            <p>
+                                <strong>Reminders Sent:</strong> {student.reminderCount ?? 0}
+                            </p>
+                            <div className="flex items-center mt-2">
+                                <label htmlFor="autoEmailToggle" className="mr-2 font-medium">
+                                    Automatic Reminder Emails:
+                                </label>
+                                <input
+                                    id="autoEmailToggle" type="checkbox" checked={student.autoEmailEnabled ?? true}
+                                    onChange={handleReminderToggle}
+                                />
+                                <span className="ml-2 text-sm">
+                                    {student.autoEmailEnabled ? "Enabled" : "Disabled"}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Student Info Card */}

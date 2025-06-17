@@ -20,7 +20,7 @@ const CronSchedulePanel = () => {
     return (
         <div className="bg-white rounded-lg shadow p-6 mb-8">
             <h2 className="text-xl font-bold mb-2">Change Cron Schedule</h2>
-            <form onSubmit={handleUpdate} className="flex items-center gap-4">
+            <form onSubmit={handleUpdate} className="lg:flex items-center gap-4">
                 <input
                     type='text'
                     className="border p-2 rounded w-64"
