@@ -1,7 +1,8 @@
 const Student = require('../models/student');
 const axios = require('axios');
-const { fetchCodeforcesData } = require('../utils/fetchCodeforcesData')
-// Helper function to check if student already exists
+const { fetchCodeforcesData } = require('../utils/fetchCodeforcesData');
+require('dotenv').config();
+//check if student already exists
 const checkStudentExists = async (email, codeforcesHandle, phone, excludeId = null) => {
     const query = {
         $or: [
@@ -18,10 +19,29 @@ const checkStudentExists = async (email, codeforcesHandle, phone, excludeId = nu
     return await Student.findOne(query);
 };
 
+//Check codeforces handle is valid or not
+const validateHandle = async (handle)=>{
+    try {
+        const res = await axios.get(`${process.env.CODEFORCES_API}.info?handles=${handle}`);
+        return res.data.status==='OK';
+    } catch (err) {
+        console.error("Failed in validating the handle:", err.message);
+        return false;
+    }
+}
 // CREATE a new student
 exports.createStudent = async (req, res) => {
     try {
         const studentData = req.body;
+
+        //Check handle is valid or not
+        const isValidHandle = await validateHandle(studentData.codeforcesHandle);
+        if (!isValidHandle) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid Codeforces handle"
+            });
+        }
 
         // Check if student already exists
         const existingStudent = await checkStudentExists(studentData.email, studentData.codeforcesHandle, studentData.phone);
@@ -32,6 +52,8 @@ exports.createStudent = async (req, res) => {
                 details: `Student with email '${studentData.email}' or student ID '${studentData.studentId}' already exists`
             });
         }
+
+
 
         // Fetch ratings using Codeforces handle
         const {
@@ -93,6 +115,14 @@ exports.updateStudent = async (req, res) => {
         const studentId = req.params.id;
         const updates = req.body;
 
+        //Check handle is valid or not
+        const isValidHandle = await validateHandle(updates.codeforcesHandle);
+        if (!isValidHandle) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid Codeforces handle"
+            });
+        }
         // Check if the student exists
         const student = await Student.findById(studentId);
         if (!student) {

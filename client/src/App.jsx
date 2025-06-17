@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from './pages/dashboard';
-import StudentProfile from './components/StudentProfile';
+import StudentProfile from './pages/StudentProfile';
 
 const App = () => {
   return (

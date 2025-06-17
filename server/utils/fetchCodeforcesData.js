@@ -1,12 +1,13 @@
 const axios = require('axios');
+require('dotenv').config();
 
 exports.fetchCodeforcesData = async (handle) => {
   try {
     // Fetch all data in parallel for efficiency
     const [userInfoRes, ratingRes, submissionsRes] = await Promise.all([
-      axios.get(`https://codeforces.com/api/user.info?handles=${handle}`),
-      axios.get(`https://codeforces.com/api/user.rating?handle=${handle}`),
-      axios.get(`https://codeforces.com/api/user.status?handle=${handle}`)
+      axios.get(`${process.env.CODEFORCES_API}.info?handles=${handle}`),
+      axios.get(`${process.env.CODEFORCES_API}.rating?handle=${handle}`),
+      axios.get(`${process.env.CODEFORCES_API}.status?handle=${handle}`)
     ]);
 
     const user = userInfoRes.data.result[0];
