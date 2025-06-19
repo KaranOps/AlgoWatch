@@ -1,6 +1,8 @@
 # AlgoWatch
 
 A full-stack web application for tracking Codeforces activity, sending inactivity reminders, and managing student programming profiles with a modern React frontend and Node.js/Express backend.
+- **Demo Video:** [Click](https://youtu.be/I0Hzwp26ERc)
+
 
 ## Project Overview
 
@@ -136,6 +138,10 @@ All endpoints require JSON bodies and return JSON responses.
 ![Form](./client/public/form.png)
 - **Responsive Design:** Works on desktop and mobile screens
 
-## Links
+---
 
-- **Demo Video:** [Demo Video Link]
+Made with ❤️ .
+
+
+
+
