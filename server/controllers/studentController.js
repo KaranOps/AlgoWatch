@@ -1,4 +1,4 @@
-const Student = require('../models/student');
+const Student = require('../models/Student');
 const axios = require('axios');
 const { fetchCodeforcesData } = require('../utils/fetchCodeforcesData');
 require('dotenv').config();
